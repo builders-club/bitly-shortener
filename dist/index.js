@@ -29,32 +29,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
 const https = __importStar(__nccwpck_require__(687));
-const run = () => __awaiter(void 0, void 0, void 0, function* () {
+const run = () => {
     const longUrl = core.getInput('long_url');
     const bitlyToken = core.getInput('bitly_token');
     const customDomain = core.getInput('bitly_custom_domain');
-    try {
-        const bitlyLink = yield bitly(bitlyToken, longUrl, customDomain);
-        core.info(`Bit.ly short URL: ${bitlyLink.link}`);
-        core.setOutput('bitly_link', bitlyLink.link);
-    }
-    catch (error) {
-        core.setFailed(error.message);
-    }
-});
-const bitly = (bitlyToken, longUrl, customDomain) => __awaiter(void 0, void 0, void 0, function* () {
     const data = JSON.stringify({
         long_url: longUrl,
         domain: customDomain || 'bit.ly'
@@ -69,28 +50,28 @@ const bitly = (bitlyToken, longUrl, customDomain) => __awaiter(void 0, void 0, v
             'Content-Type': 'application/json'
         }
     };
-    return new Promise((resolve, reject) => {
-        core.info(`Requesting Bit.ly short URL for: ${longUrl}`);
+    core.info(`Requesting Bit.ly short URL for: ${longUrl}`);
+    const req = https.request(options, response => {
         let body = '';
-        const req = https.request(options, response => {
-            response.on('data', (chunk) => {
-                body += chunk;
-            });
+        response.setEncoding('utf8');
+        response.on('data', (chunk) => {
+            body += chunk;
         });
-        req.on('end', () => {
-            core.info(body);
-            resolve(JSON.parse(body));
+        response.on('end', () => {
+            const link = JSON.parse(body);
+            core.info(`Bit.ly short URL: ${link.link}`);
+            core.setOutput('bitly_link', link.link);
         });
-        req.on('error', (e) => {
-            reject(e);
-        });
-        req.on('timeout', () => {
-            reject(new Error(`Request timed out`));
-        });
-        req.write(data);
-        req.end();
     });
-});
+    req.on('error', (e) => {
+        core.setFailed(e.message);
+    });
+    req.on('timeout', () => {
+        core.setFailed(`Request timed out`);
+    });
+    req.write(data);
+    req.end();
+};
 run();
 
 
