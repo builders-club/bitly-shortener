@@ -47,6 +47,7 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
     const customDomain = core.getInput('bitly_custom_domain');
     try {
         const bitlyLink = yield bitly(bitlyToken, longUrl, customDomain);
+        core.info(`Bit.ly short URL: ${bitlyLink.link}`);
         core.setOutput('bitly_link', bitlyLink.link);
     }
     catch (error) {

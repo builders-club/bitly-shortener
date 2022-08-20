@@ -9,6 +9,7 @@ const run = async (): Promise<void> => {
 
   try {
     const bitlyLink = await bitly(bitlyToken, longUrl, customDomain)
+    core.info(`Bit.ly short URL: ${bitlyLink.link}`)
     core.setOutput('bitly_link', bitlyLink.link)
   } catch (error) {
     core.setFailed((error as Error).message)
