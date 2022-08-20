@@ -1,0 +1,52 @@
+{
+  "name": "bitly-shortener",
+  "version": "1.0.0",
+  "description": "A GitHub Action to automate generating shortened URLs with Bit.ly.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write **/*.ts",
+    "format-check": "prettier --check **/*.ts",
+    "lint": "eslint src/**/*.ts",
+    "pack": "npm run build && ncc build",
+    "test": "jest"
+  },
+  "pre-commit": "pack",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/builders-club/bitly-shortener.git"
+  },
+  "keywords": [
+    "bitly",
+    "shorten",
+    "link",
+    "action"
+  ],
+  "author": "Michael Jolley <mike@baldbeardedbuilder.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/builders-club/bitly-shortener/issues"
+  },
+  "homepage": "https://github.com/builders-club/bitly-shortener#readme",
+  "dependencies": {
+    "@actions/core": "^1.9.1",
+    "@actions/github": "^5.0.3",
+    "actions-toolkit": "^6.0.1"
+  },
+  "devDependencies": {
+    "@octokit/types": "^7.1.0",
+    "@types/jest": "^28.1.7",
+    "@types/node": "^18.7.8",
+    "@typescript-eslint/parser": "^5.33.1",
+    "@vercel/ncc": "^0.34.0",
+    "eslint": "^8.22.0",
+    "eslint-plugin-github": "^4.3.7",
+    "eslint-plugin-jest": "^26.8.4",
+    "jest": "^28.1.3",
+    "jest-circus": "^28.1.3",
+    "js-yaml": "^4.1.0",
+    "prettier": "^2.7.1",
+    "ts-jest": "^28.0.8",
+    "typescript": "^4.7.4"
+  }
+}

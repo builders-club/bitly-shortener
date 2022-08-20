@@ -1,0 +1,21 @@
+name: bitly-shortener
+description: A GitHub Action to automate generating shortened URLs with Bit.ly.
+branding:
+  icon: link
+  color: orange
+inputs:
+  long_url:
+    required: true
+    description: Long URL to shorten
+  bitly_token:
+    required: true
+    description: Bit.ly API Token
+  bitly_custom_domain:
+    required: false
+    description: Optional custom domain. Defaults to bit.ly
+outputs:
+  bitly_link:
+    description: The Bit.ly short URL
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
