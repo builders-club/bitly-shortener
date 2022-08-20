@@ -40,11 +40,11 @@ jobs:
   shorten:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Bitly shortener
         id: shortener
-        uses: builders-club/bitly-shortener@main
+        uses: builders-club/bitly-url-shortener@v1
         with:
           bitly_token: ${{ secrets.BITLY_TOKEN }}
           long_url: https://github.com/${{ github.repository }}/commit/${{ github.sha }}

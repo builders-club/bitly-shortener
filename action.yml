@@ -1,4 +1,4 @@
-name: bitly-shortener
+name: bitly-url-shortener
 description: A GitHub Action to automate generating shortened URLs with Bit.ly.
 branding:
   icon: link

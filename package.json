@@ -1,5 +1,5 @@
 {
-  "name": "bitly-shortener",
+  "name": "bitly-url-shortener",
   "version": "1.0.0",
   "description": "A GitHub Action to automate generating shortened URLs with Bit.ly.",
   "main": "dist/index.js",
@@ -14,7 +14,7 @@
   "pre-commit": "pack",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/builders-club/bitly-shortener.git"
+    "url": "git+https://github.com/builders-club/bitly-url-shortener.git"
   },
   "keywords": [
     "bitly",
@@ -25,9 +25,9 @@
   "author": "Michael Jolley <mike@baldbeardedbuilder.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/builders-club/bitly-shortener/issues"
+    "url": "https://github.com/builders-club/bitly-url-shortener/issues"
   },
-  "homepage": "https://github.com/builders-club/bitly-shortener#readme",
+  "homepage": "https://github.com/builders-club/bitly-url-shortener#readme",
   "dependencies": {
     "@actions/core": "^1.9.1",
     "@actions/github": "^5.0.3",
