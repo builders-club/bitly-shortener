@@ -1,0 +1,21 @@
+name: Test Action
+
+on:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Bitly shortener
+        id: shortener
+        uses: builders-club/bitly-shortener@main
+        with:
+          bitly_token: ${{ secrets.BITLY_TOKEN }}
+          long_url: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+          bitly_custom_domain: dpgr.am
+
+      - name: outputs
+        run: echo "${{ steps.shortener.outputs.bitly_link }}" / https://github.com/${{ github.repository }}/commit/${{ github.sha }}
