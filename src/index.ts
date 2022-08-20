@@ -7,8 +7,13 @@ const run = async (): Promise<void> => {
   const bitlyToken: string = core.getInput('bitly_token')
   const customDomain: string = core.getInput('bitly_custom_domain')
 
-  const bitlyLink = await bitly(bitlyToken, longUrl, customDomain)
-  core.setOutput('bitly_link', bitlyLink.link)
+  try {
+    const bitlyLink = await bitly(bitlyToken, longUrl, customDomain)
+    console.dir(bitlyLink, {depth: null})
+    core.setOutput('bitly_link', bitlyLink.link)
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const bitly = async (
