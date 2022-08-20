@@ -47,7 +47,6 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
     const customDomain = core.getInput('bitly_custom_domain');
     try {
         const bitlyLink = yield bitly(bitlyToken, longUrl, customDomain);
-        console.dir(bitlyLink, { depth: null });
         core.setOutput('bitly_link', bitlyLink.link);
     }
     catch (error) {
@@ -62,9 +61,8 @@ const bitly = (bitlyToken, longUrl, customDomain) => __awaiter(void 0, void 0, v
     const options = {
         hostname: 'api-ssl.bitly.com',
         path: '/v4/shorten',
-        port: 443,
         method: 'POST',
-        json: data,
+        json: true,
         headers: {
             Authorization: `Bearer ${bitlyToken}`,
             'Content-Type': 'application/json'
@@ -72,32 +70,23 @@ const bitly = (bitlyToken, longUrl, customDomain) => __awaiter(void 0, void 0, v
     };
     return new Promise((resolve, reject) => {
         core.info(`Requesting Bit.ly short URL for: ${longUrl}`);
-        https.request(options, response => {
-            let body = '';
-            response
-                .on('data', chunk => {
+        let body = '';
+        const req = https.request(options, response => {
+            response.on('data', (chunk) => {
                 body += chunk;
-            })
-                .on('end', () => {
-                const result = JSON.parse(body);
-                core.info(`Status Code received from Bit.ly: ${result.status_code}`);
-                if (result.status_code === 200) {
-                    resolve(result.data);
-                }
-                else {
-                    reject(new Error(result.status_txt));
-                }
-            })
-                .on('error', error => {
-                core.error(error.message);
-                reject(error);
-            })
-                .on('timeout', () => {
-                core.error('Request timed out');
-                reject(new Error('Timeout'));
-            })
-                .setTimeout(10000);
+            });
         });
+        req.on('end', () => {
+            resolve(JSON.parse(body));
+        });
+        req.on('error', (e) => {
+            reject(e);
+        });
+        req.on('timeout', () => {
+            reject(new Error(`Request timed out`));
+        });
+        req.write(data);
+        req.end();
     });
 });
 run();
