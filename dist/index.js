@@ -36,13 +36,15 @@ const run = () => {
     const longUrl = core.getInput('long_url');
     const bitlyToken = core.getInput('bitly_token');
     const customDomain = core.getInput('bitly_custom_domain');
+    const linkTitle = core.getInput('link_title');
     const data = JSON.stringify({
         long_url: longUrl,
-        domain: customDomain || 'bit.ly'
+        domain: customDomain || 'bit.ly',
+        title: linkTitle || undefined
     });
     const options = {
         hostname: 'api-ssl.bitly.com',
-        path: '/v4/shorten',
+        path: '/v4/bitlinks',
         method: 'POST',
         json: true,
         headers: {

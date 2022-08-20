@@ -13,6 +13,9 @@ inputs:
   bitly_custom_domain:
     required: false
     description: Optional custom domain. Defaults to bit.ly
+  link_title:
+    required: false
+    description: Optional title of the link
 outputs:
   bitly_link:
     description: The Bit.ly short URL
