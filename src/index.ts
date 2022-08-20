@@ -49,6 +49,8 @@ const bitly = async (
     })
 
     req.on('end', () => {
+      
+      core.info(body)
       resolve(JSON.parse(body) as BitlyLink)
     })
 

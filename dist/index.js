@@ -78,6 +78,7 @@ const bitly = (bitlyToken, longUrl, customDomain) => __awaiter(void 0, void 0, v
             });
         });
         req.on('end', () => {
+            core.info(body);
             resolve(JSON.parse(body));
         });
         req.on('error', (e) => {
