@@ -12,7 +12,7 @@ const run = async (): Promise<void> => {
     console.dir(bitlyLink, {depth: null})
     core.setOutput('bitly_link', bitlyLink.link)
   } catch (error) {
-    console.log(error)
+    core.setFailed((error as Error).message)
   }
 }
 

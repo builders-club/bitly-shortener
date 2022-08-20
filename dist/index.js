@@ -51,7 +51,7 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
         core.setOutput('bitly_link', bitlyLink.link);
     }
     catch (error) {
-        console.log(error);
+        core.setFailed(error.message);
     }
 });
 const bitly = (bitlyToken, longUrl, customDomain) => __awaiter(void 0, void 0, void 0, function* () {
