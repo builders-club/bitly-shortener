@@ -45,11 +45,20 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
     const longUrl = core.getInput('long_url');
     const bitlyToken = core.getInput('bitly_token');
     const customDomain = core.getInput('bitly_custom_domain');
-    const bitlyLink = yield bitly(bitlyToken, longUrl, customDomain);
-    core.setOutput('bitly_link', bitlyLink.link);
+    try {
+        const bitlyLink = yield bitly(bitlyToken, longUrl, customDomain);
+        console.dir(bitlyLink, { depth: null });
+        core.setOutput('bitly_link', bitlyLink.link);
+    }
+    catch (error) {
+        console.log(error);
+    }
 });
 const bitly = (bitlyToken, longUrl, customDomain) => __awaiter(void 0, void 0, void 0, function* () {
-    const data = JSON.stringify({ long_url: longUrl, domain: customDomain || 'bit.ly' });
+    const data = JSON.stringify({
+        long_url: longUrl,
+        domain: customDomain || 'bit.ly'
+    });
     const options = {
         hostname: 'api-ssl.bitly.com',
         path: '/v4/shorten',
@@ -57,31 +66,37 @@ const bitly = (bitlyToken, longUrl, customDomain) => __awaiter(void 0, void 0, v
         method: 'POST',
         json: data,
         headers: {
-            'Authorization': `Bearer ${bitlyToken}`,
+            Authorization: `Bearer ${bitlyToken}`,
             'Content-Type': 'application/json'
         }
     };
     return new Promise((resolve, reject) => {
-        https.request(options, (response) => {
+        https.request(options, response => {
             let body = '';
-            response.on('data', (chunk) => {
+            response
+                .on('data', chunk => {
                 body += chunk;
-            }).on('end', () => {
+            })
+                .on('end', () => {
                 const result = JSON.parse(body);
                 if (result.status_code === 200) {
                     resolve(result.data);
                 }
                 else {
-                    reject(result.status_txt);
+                    reject(new Error(result.status_txt));
                 }
-            }).on('error', (error) => {
+            })
+                .on('error', error => {
                 reject(error);
-            }).on('timeout', () => {
-                reject('Timeout');
-            }).setTimeout(10000);
+            })
+                .on('timeout', () => {
+                reject(new Error('Timeout'));
+            })
+                .setTimeout(10000);
         });
     });
 });
+run();
 
 
 /***/ }),
