@@ -25,6 +25,7 @@ const bitly = async (
     long_url: longUrl,
     domain: customDomain || 'bit.ly'
   })
+  
 
   const options = {
     hostname: 'api-ssl.bitly.com',
@@ -39,6 +40,8 @@ const bitly = async (
   }
 
   return new Promise<BitlyLink>((resolve, reject) => {
+    
+    core.info(`Requesting Bit.ly short URL for: ${longUrl}`)
     https.request(options, response => {
       let body = ''
       response
@@ -47,6 +50,9 @@ const bitly = async (
         })
         .on('end', () => {
           const result = JSON.parse(body)
+          
+          core.info(`Status Code received from Bit.ly: ${result.status_code}`)
+
           if (result.status_code === 200) {
             resolve(result.data as BitlyLink)
           } else {
@@ -54,9 +60,11 @@ const bitly = async (
           }
         })
         .on('error', error => {
+          core.error((error as Error).message)
           reject(error)
         })
         .on('timeout', () => {
+          core.error('Request timed out')
           reject(new Error('Timeout'))
         })
         .setTimeout(10000)

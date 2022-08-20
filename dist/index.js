@@ -71,6 +71,7 @@ const bitly = (bitlyToken, longUrl, customDomain) => __awaiter(void 0, void 0, v
         }
     };
     return new Promise((resolve, reject) => {
+        core.info(`Requesting Bit.ly short URL for: ${longUrl}`);
         https.request(options, response => {
             let body = '';
             response
@@ -79,6 +80,7 @@ const bitly = (bitlyToken, longUrl, customDomain) => __awaiter(void 0, void 0, v
             })
                 .on('end', () => {
                 const result = JSON.parse(body);
+                core.info(`Status Code received from Bit.ly: ${result.status_code}`);
                 if (result.status_code === 200) {
                     resolve(result.data);
                 }
@@ -87,9 +89,11 @@ const bitly = (bitlyToken, longUrl, customDomain) => __awaiter(void 0, void 0, v
                 }
             })
                 .on('error', error => {
+                core.error(error.message);
                 reject(error);
             })
                 .on('timeout', () => {
+                core.error('Request timed out');
                 reject(new Error('Timeout'));
             })
                 .setTimeout(10000);
